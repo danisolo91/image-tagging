@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import firebase from 'firebase/app';
+import { useEffect, useState } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+
+    const [state, setState] = useState({ scores: null });
+
+    useEffect(() => {
+        firebase.firestore().collection('scores')
+        .onSnapshot(serverUpdate => {
+            // firebase will call this func everytime the collection is updated
+            const scores = serverUpdate.docs.map(_score => {
+                const data = _score.data();
+                data['id'] = _score.id;
+                return data;
+            });
+            console.log(scores);
+            setState({ scores: scores });
+        });
+    }, []);
+
+    return (
+        <>
+            { state.scores && state.scores[0].name + ' - ' + state.scores[0].score }
+        </>
+    );
+};
 
 export default App;

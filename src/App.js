@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import { useEffect, useState } from 'react';
+import img from './image.jpg';
 import Start from './components/start';
 import Top from './components/top';
 
@@ -25,7 +26,7 @@ const App = () => {
         <>
             <Top />
             <div className="image">
-                <img src="image.jpg" alt="tag the characters" />
+                <img src={img} alt="tag the characters" />
             </div>
             <div id="modal" className="modal">
                 <Start />

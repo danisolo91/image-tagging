@@ -1,27 +1,39 @@
 import firebase from 'firebase/app';
 import { useEffect, useState } from 'react';
+import Start from './components/start';
+import Top from './components/top';
 
 const App = () => {
 
-    const [state, setState] = useState({ scores: null });
+    const [state, setState] = useState({ characters: null });
 
     useEffect(() => {
-        firebase.firestore().collection('scores')
+        firebase.firestore().collection('characters')
         .onSnapshot(serverUpdate => {
-            // firebase will call this func everytime the collection is updated
-            const scores = serverUpdate.docs.map(_score => {
-                const data = _score.data();
-                data['id'] = _score.id;
+            // firebase will run this everytime the collection is updated
+            const characters = serverUpdate.docs.map(_character => {
+                const data = _character.data();
+                data['id'] = _character.id;
                 return data;
             });
-            console.log(scores);
-            setState({ scores: scores });
+            console.log(characters);
+            setState({ characters: characters });
         });
     }, []);
 
     return (
         <>
-            { state.scores && state.scores[0].name + ' - ' + state.scores[0].score }
+            <Top />
+            <div className="image">
+                <img src="image.jpg" alt="tag the characters" />
+            </div>
+            <div id="modal" className="modal">
+                <Start />
+                {
+                    // <Congratulations />
+                    // <Scores />
+                }
+            </div>
         </>
     );
 };

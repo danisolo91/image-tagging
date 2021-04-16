@@ -1,4 +1,7 @@
-const Scores = () => {
+const Scores = ({ modal }) => {
+
+    modal.style.display = 'block';
+
     return (
         <div className="modal-content">
             <h1>Scores</h1>

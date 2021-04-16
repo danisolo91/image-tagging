@@ -4,6 +4,7 @@ import './index.css';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import App from './App';
+import { GameProvider } from './contexts/GameContext';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAy7DCJogShUAZUTBoZuPcQdC5Hwc3yCYk",
@@ -18,7 +19,9 @@ firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GameProvider>
+      <App />
+    </GameProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

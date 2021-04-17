@@ -7,10 +7,19 @@ const Top = () => {
 
     const [time, setTime] = useState({
         totalSeconds: 0,
-        hours: '00',
         minutes: '00',
         seconds: '00',
     });
+
+    useEffect(() => {
+        if(game.gameOver) {
+            setTime({
+                totalSeconds: 0,
+                minutes: '00',
+                seconds: '00',
+            });
+        }
+    },[game.gameOver]);
 
     useEffect(() => {
         if (game.player.startTime && !game.player.endTime) {
@@ -23,13 +32,10 @@ const Top = () => {
 
     const getTime = () => {
         let totalSeconds = time.totalSeconds + 1;
-        setTime(prevState => {
-            return {
-                totalSeconds: totalSeconds,
-                hours: '00',
-                minutes: format(parseInt(totalSeconds / 60)),
-                seconds: format(totalSeconds % 60),
-            };
+        setTime({
+            totalSeconds: totalSeconds,
+            minutes: format(parseInt(totalSeconds / 60)),
+            seconds: format(totalSeconds % 60),
         });
     };
 
@@ -58,7 +64,7 @@ const Top = () => {
                 }
             </div>
             <div className="counter">
-                {time.hours}:{time.minutes}:{time.seconds}
+                {time.minutes}:{time.seconds}
             </div>
         </div>
     );

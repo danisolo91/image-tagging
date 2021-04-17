@@ -13,7 +13,6 @@ export const GameProvider = (props) => {
             endTime: null,
         },
         characters: null,
-        scores: null,
     });
 
     useEffect(() => {
@@ -25,18 +24,10 @@ export const GameProvider = (props) => {
                     data['id'] = _character.id;
                     return data;
                 });
-
-                const scores = serverUpdate.docs.map(_score => {
-                    const data = _score.data();
-                    data['id'] = _score.id;
-                    return data;
-                });
-
                 setState(prevState => {
                     return {
                         ...prevState,
                         characters: characters,
-                        scores: scores,
                     };
                 });
             });

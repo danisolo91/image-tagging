@@ -3,8 +3,9 @@ import Start from './components/start';
 import Congratulations from './components/congratulations';
 import Scores from './components/scores';
 import Top from './components/top';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { GameContext } from './contexts/GameContext';
+import firebase from 'firebase/app';
 
 const App = () => {
 
@@ -17,21 +18,21 @@ const App = () => {
         let y = e.pageY;
         let id = null;
         let found = 0;
-        
+
 
         game.characters.forEach(_character => {
-            if(_character.found) found = found + 1;
-            if(x >= _character.minX && x <= _character.maxX &&
-            y >= _character.minY && y <= _character.maxY) {
+            if (_character.found) found = found + 1;
+            if (x >= _character.minX && x <= _character.maxX &&
+                y >= _character.minY && y <= _character.maxY) {
                 id = _character.id;
                 found = found + 1;
             }
         });
 
-        if(id) {
+        if (id) {
             let endTime = null;
 
-            if(found === 3) {
+            if (found === 3) {
                 endTime = new Date();
             }
 
@@ -43,16 +44,31 @@ const App = () => {
                         endTime: endTime,
                     },
                     characters: prevState.characters.map(_ch => {
-                        if(_ch.id === id) _ch.found = true;
+                        if (_ch.id === id) _ch.found = true;
                         return _ch;
                     }),
                 };
             });
-            alert('very good!');
+            console.log('very good!');
         } else {
-            alert('Noup!');
+            console.log('Noup!');
         }
     };
+
+    useEffect(() => {
+        if (game.gameOver) {
+            firebase.firestore().collection('scores').add({
+                name: game.player.name,
+                time: game.player.endTime - game.player.startTime,
+            })
+                .then(docRef => {
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+        }
+    }, [game]);
 
     return (
         <>
@@ -63,7 +79,7 @@ const App = () => {
                     game.player.startTime === null ?
                         <Start modal={modal.current} /> :
                         (game.player.endTime && !game.gameOver) &&
-                            <Congratulations modal={modal.current} />
+                        <Congratulations modal={modal.current} />
                 }
                 {game.gameOver && <Scores modal={modal.current} />}
             </div>
